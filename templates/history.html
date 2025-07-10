@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Prediction History</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            margin: 0;
+        }
+
+        .header a {
+            text-decoration: none;
+            color: white;
+            background: #d9534f;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            background: #6c757d;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Hello, {{ user.name }} | Prediction History</h2>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <div class="container">
+       {% if predictions %}
+    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>XGBoost</th>
+                <th>LightGBM</th>
+                <th>Logistic Regression</th>
+                <th>Naive Bayes</th>
+                <th>Random Forest</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in predictions %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ p.result_xgb }}</td>
+                    <td>{{ p.result_lgbm }}</td>
+                    <td>{{ p.result_logistic }}</td>
+                    <td>{{ p.result_nb }}</td>
+                    <td>{{ p.result_rf }}</td>
+                    <td>{{ p.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No prediction history found.</p>
+{% endif %}
+
+
+        <a class="back-btn" href="{{ url_for('profile') }}">← Back to Profile</a>
+    </div>
+
+</body>
+</html>

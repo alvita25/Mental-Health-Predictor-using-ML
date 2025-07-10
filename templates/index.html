@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat2Care - Mental Health Chatbot</title>
+  <style>
+    :root {
+      --primary-color: #4E89AE;
+      --accent-color: #F6C667;
+      --light-bg: #EAF4F4;
+      --dark-text: #1F1F1F;
+      --footer-bg: #1F3A5F;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url("../static/images/basic.jpeg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: var(--light-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 40px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      height:100px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .header-buttons a {
+      margin-left: 15px;
+      padding: 10px 20px;
+      text-decoration: none;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .header-buttons a:hover {
+      background-color: #3a6f93;
+    }
+
+    .container {
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .combined-box {
+      display: flex;
+      flex-wrap: wrap;
+      background: white;
+      max-width: 1000px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      padding: 30px;
+      gap: 30px;
+    }
+
+    .text-section {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .text-section h2 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .text-section p {
+      color: #444;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .image-section {
+      flex: 1;
+      text-align: center;
+      min-width: 250px;
+    }
+
+    .image-section img {
+      max-width: 100%;
+      min-height: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    .predict-btn {
+      margin-top: 20px;
+      display: inline-block;
+      background-color: var(--accent-color);
+      color: #333;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .features-section {
+      background: #f0f0f0;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .features-section h2 {
+      color: #333;
+      margin-bottom: 40px;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .feature-box {
+      background: white;
+      padding: 25px;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.08);
+    }
+
+    .feature-box h3 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .feature-box p {
+      color: #555;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .flash {
+      padding: 10px;
+      margin: 15px auto;
+      border-radius: 5px;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .flash.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .flash.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    footer {
+      background-color: var(--footer-bg);
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+    }
+
+    @media (max-width: 768px) {
+      .header-title {
+        text-align: left;
+        font-size: 20px;
+      }
+
+      .header-buttons {
+        margin-top: 10px;
+      }
+
+      .header-buttons a {
+        margin-left: 0;
+        margin-right: 10px;
+      }
+
+      .combined-box {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .text-section, .image-section {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div id="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <img src="https://cdn-icons-png.flaticon.com/512/4712/4712922.png" alt="AI Head Icon" width="40">
+
+
+
+    </div>
+    <div class="header-title">Chat2Care - Your Mental Health Companion</div>
+    <div class="header-buttons">
+      <a href="/login">Login</a>
+      <a href="/register">Sign Up</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="combined-box">
+      <div class="text-section">
+        <h2>Welcome to Chat2Care</h2>
+        <p>
+          Chat2Care is your intelligent mental health assistant powered by AI.
+          Our chatbot listens to your thoughts, recognizes your emotions, and helps
+          assess your mental well-being using machine learning models like XGBoost,
+          LightGBM, Logistic Regression, Naive Bayes, and Random Forest.
+        </p>
+        <p>
+          The app supports multilingual conversations, real-time speech recognition,
+          and provides a safe, non-judgmental space for users to talk. You can view
+          your previous predictions history anytime.
+        </p>
+        
+      </div>
+      <div class="image-section">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3GJmjxZ4WLLfsZPkSjAw_3WGd3gkx-nyZbg&s" alt="Mental Health Support">
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section">
+    <h2>How Chat2Care Supports Mental Wellness</h2>
+    <div class="features">
+      <div class="feature-box">
+        <h3>🌐 Multilingual Conversations</h3>
+        <p>
+          The app supports multilingual communication so you can speak freely in your native language without barriers or judgment.
+        </p>
+      </div>
+      <div class="feature-box">
+        <h3>🎙️ Real-Time Speech Support</h3>
+        <p>
+          With real-time speech recognition, Chat2Care listens to you instantly, offering a smooth and human-like conversation experience.
+        </p>
+      </div>
+      <div class="feature-box">
+        <h3>📊 Prediction History</h3>
+        <p>
+          Easily view your previous prediction history anytime, allowing you to track your mental health journey over time.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Chat2Care | All rights reserved.
+  </footer>
+
+  <!-- Flash Auto-dismiss Script -->
+  <script>
+    setTimeout(function () {
+      const flashContainer = document.getElementById("flash-messages");
+      if (flashContainer) {
+        flashContainer.style.transition = "opacity 0.5s ease-out";
+        flashContainer.style.opacity = "0";
+        setTimeout(() => flashContainer.remove(), 500);
+      }
+    }, 3000);
+  </script>
+
+</body>
+</html>

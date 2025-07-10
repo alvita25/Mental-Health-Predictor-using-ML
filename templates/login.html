@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Chat2Care</title>
+  <style>
+    :root {
+      --primary-color: #4E89AE;
+      --accent-color: #F6C667;
+      --header-bg: #EAF4F4;
+      --footer-bg: #1F3A5F;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--header-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 40px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      height:100px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+    }
+
+    .header-title {
+      flex: 1;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .header-buttons a {
+      margin-left: 15px;
+      padding: 10px 20px;
+      text-decoration: none;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .header-buttons a:hover {
+      background-color: #3a6f93;
+    }
+
+    /* Login Form Container */
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    form {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      background-color: #28a745;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .flash {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .flash.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .flash.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    @media (max-width: 500px) {
+      .header-title {
+        font-size: 18px;
+      }
+
+      form {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <img src="https://cdn-icons-png.flaticon.com/512/4320/4320456.png" alt="Brain Icon">
+    </div>
+    <div class="header-title">Chat2Care - Your Mental Health Companion</div>
+    <div class="header-buttons">
+      <a href="/login">Login</a>
+      <a href="/register">Sign Up</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="form-container">
+    <form method="POST" action="/login">
+      <h2>Login</h2>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <input type="email" name="email" placeholder="Enter email" required>
+      <input type="password" name="password" placeholder="Enter password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+</body>
+</html>

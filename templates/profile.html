@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile - Mental Health Chat</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    textarea, input { width: 100%; padding: 10px; margin: 10px 0; }
+    button { padding: 10px 20px; }
+    #chat-box, #prediction { margin-top: 20px; border: 1px solid #ccc; padding: 10px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="navbar" style="text-align: right; padding: 15px; background: #f0f0f0;">
+    <span style="float: left; font-weight: bold;">Welcome, {{ user.name }}!</span>
+    <a href="{{ url_for('logout') }}" style="text-decoration: none; color: white; background: #d9534f; padding: 10px 15px; border-radius: 5px;">Logout</a>
+    <a href="{{ url_for('history') }}">View History</a>
+  </div>
+
+  <h1>Welcome to Your Profile</h1>
+
+  <h3>Chat with AI</h3>
+  <label for="languageSelect">Choose Language:</label>
+  <select id="languageSelect">
+    <option value="en-US">English</option>
+    <option value="hi-IN">Hindi</option>
+    <option value="ta-IN">Tamil</option>
+    <option value="te-IN">Telugu</option>
+    <option value="kn-IN">Kannada</option>
+    <option value="ml-IN">Malayalam</option>
+  </select>
+
+  <input id="chatInput" placeholder="Type your message or speak..." />
+  <button onclick="sendToChat()">Send</button>
+  <button onclick="startListening()">🎤 Speak</button>
+  <button onclick="stopListening()">⏹️ Stop</button>
+
+  <div id="chat-box"></div>
+
+  <hr>
+
+  <h3>Check Your Mental Health Prediction</h3>
+  <form id="predictForm" method="POST" action="/predict">
+    <textarea name="chat_history" id="chatHistory" hidden></textarea>
+    <button type="submit">Predict Mental Health</button>
+  </form>
+
+  {% if xgb_result or lgbm_result or logistic_result or nb_result or rf_result %}
+  <div id="prediction" style="border: 1px solid #ccc; padding: 15px; margin-top: 20px;">
+    <h3>Prediction Results</h3>
+    {% if xgb_result %}
+      <p><strong>XGBoost:</strong> {{ xgb_result }}</p>
+    {% endif %}
+    {% if lgbm_result %}
+      <p><strong>LightGBM:</strong> {{ lgbm_result }}</p>
+    {% endif %}
+    {% if logistic_result %}
+      <p><strong>Logistic Regression:</strong> {{ logistic_result }}</p>
+    {% endif %}
+    {% if nb_result %}
+      <p><strong>Naive Bayes:</strong> {{ nb_result }}</p>
+    {% endif %}
+    {% if rf_result %}
+      <p><strong>Random Forest:</strong> {{ rf_result }}</p>
+    {% endif %}
+  </div>
+{% endif %}
+
+ {% if chat_history_display %}
+  <div id="chat-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 15px;">
+    <h3>Previous Chat</h3>
+    <pre>{{ chat_history_display | safe }}</pre>
+  </div>
+{% endif %}
+
+  <script>
+    let chatHistory = "";  // For prediction (only English user messages)
+    let recognition;
+    let isListening = false;
+    let spokenTranscript = "";
+
+    async function translateText(text, targetLang = 'en') {
+      const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
+      const result = await response.json();
+      return result[0][0][0];
+    }
+
+    async function sendToChat() {
+      const input = document.getElementById("chatInput");
+      const nativeText = input.value.trim();
+      if (!nativeText) return;
+
+      const selectedLang = document.getElementById("languageSelect").value;
+      const translated = await translateText(nativeText, 'en');
+
+      // Send message to backend
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          translated: translated,     // for prediction
+          native: nativeText,         // display
+          language: selectedLang
+        })
+      });
+
+      const data = await res.json();
+
+      // Only native (translated back) is shown
+      chatHistory += `${translated}\n`; // This is what goes for prediction (not shown)
+      document.getElementById("chatHistory").value = chatHistory; // Keep updating prediction input
+
+      // Show only native chat messages to user
+      document.getElementById("chat-box").innerText += `You: ${data.native}\n`;
+      document.getElementById("chat-box").innerText += `AI: ${data.response_native}\n\n`;
+
+      input.value = "";
+    }
+
+    function startListening() {
+      if (isListening) return;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = document.getElementById("languageSelect").value;
+      recognition.interimResults = false;
+      recognition.continuous = true;
+
+      spokenTranscript = "";
+      isListening = true;
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          spokenTranscript += event.results[i][0].transcript + " ";
+        }
+        document.getElementById("chatInput").value = spokenTranscript.trim();
+      };
+
+      recognition.onend = function () {
+        if (isListening) recognition.start();
+      };
+
+      recognition.onerror = function (event) {
+        alert("Speech recognition error: " + event.error);
+      };
+    }
+
+    function stopListening() {
+      if (!isListening) return;
+      recognition.stop();
+      isListening = false;
+      document.getElementById("chatInput").value = spokenTranscript.trim();
+    }
+
+    // Set chatHistory before prediction submit
+    document.getElementById("predictForm").addEventListener("submit", function () {
+      document.getElementById("chatHistory").value = chatHistory;
+    });
+  </script>
+</body>
+</html>
