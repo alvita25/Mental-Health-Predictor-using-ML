@@ -71,6 +71,10 @@
       padding: 40px 30px;
       border-radius: 10px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+       background-image: url("../static/images/background2.jpg");
+      background-size:  100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     .form-container h2 {
@@ -80,7 +84,7 @@
     }
 
     form input {
-      width: 100%;
+      width: 90%;
       padding: 12px;
       margin-bottom: 20px;
       border-radius: 5px;
@@ -91,7 +95,7 @@
     form button {
       width: 100%;
       padding: 12px;
-      background-color: var(--primary-color);
+     background-color: #2242aa;
       border: none;
       color: white;
       font-weight: bold;
@@ -134,7 +138,7 @@
   <!-- Header -->
   <header>
     <div class="header-left">
-      <img src="https://cdn-icons-png.flaticon.com/512/4320/4320456.png" alt="Brain Icon">
+      <img src="{{ url_for('static', filename='images/brain2.jpg') }}" alt="Brain Icon" style="height: 80px; width:100%; margin-right: 10px;">
     </div>
     <div class="header-title">Chat2Care - Your Mental Health Companion</div>
     <div class="header-buttons">
@@ -145,7 +149,7 @@
 
   <!-- Flash Messages -->
   <div class="form-container">
-    <h2>Login</h2> <!-- Change to "Sign Up" for register page -->
+    <h2>Register</h2> <!-- Change to "Sign Up" for register page -->
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}

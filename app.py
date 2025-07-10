@@ -85,9 +85,7 @@ def preprocess_text(text, model_type="default"):
     return hstack([tfidf, np.array([[num_chars, num_sentences]])])
 
 
-# def ai_response(native_text, lang_code):
-#     prompt = f"User speaks in {lang_code}. Reply empathetically in that language:\nUser: {native_text}\nResponse:"
-#     return gemini_model.generate_content(prompt).text
+
 def ai_response(native_text, lang_code):
     prompt = f"User speaks in {lang_code}. Reply empathetically in that language:\nUser: {native_text}\nResponse:"
     try:
@@ -143,22 +141,7 @@ def profile():
     user = User.query.get(session['user_id'])
     return render_template('profile.html', user=user)
 
-# @app.route('/chat', methods=['POST'])
-# def chat():
-#     data = request.get_json()
-#     native = data.get('native', "")
-#     lang = data.get('language', "en-US")
-#     code = lang.split('-')[0]
 
-#     # Use Gemini for multilingual empathetic response
-#     reply = ai_response(native, lang)
-#     return jsonify({
-#         "native": native,
-#         "language": lang,
-#         "response_native": reply,
-#         "translated": None,
-#         "response": None
-#     })
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
@@ -198,41 +181,62 @@ def predict():
     feats_nb = preprocess_text(text, "nb")
     feats_rf = preprocess_text(text, "random_forest")
 
-    # XGBoost & LightGBM (same features)
+    # XGBoost
     pred_xgb = xgb_model.predict_proba(feats_xgb)[0]
-    rx = label_enc_xgb.inverse_transform([np.argmax(pred_xgb)])[0]
+    xgb_index = np.argmax(pred_xgb)
+    rx = label_enc_xgb.inverse_transform([xgb_index])[0]
+    xgb_certainty = round(pred_xgb[xgb_index] * 100, 2)
 
+    # LightGBM
     pred_lgbm = lgbm_model.predict_proba(feats_xgb)[0]
-    rl = label_enc_xgb.inverse_transform([np.argmax(pred_lgbm)])[0]
+    lgbm_index = np.argmax(pred_lgbm)
+    rl = label_enc_xgb.inverse_transform([lgbm_index])[0]
+    lgbm_certainty = round(pred_lgbm[lgbm_index] * 100, 2)
 
     # Logistic Regression
-    rlog = label_enc.inverse_transform(logistic_model.predict(feats_log))[0]
+    pred_log = logistic_model.predict_proba(feats_log)[0]
+    log_index = np.argmax(pred_log)
+    rlog = label_enc.inverse_transform([log_index])[0]
+    log_certainty = round(pred_log[log_index] * 100, 2)
 
     # Naive Bayes
-    rnb = label_enc_nb.inverse_transform(nb_model.predict(feats_nb))[0]
+    pred_nb = nb_model.predict_proba(feats_nb)[0]
+    nb_index = np.argmax(pred_nb)
+    rnb = label_enc_nb.inverse_transform([nb_index])[0]
+    nb_certainty = round(pred_nb[nb_index] * 100, 2)
 
     # Random Forest
-    rrf = label_enc_random_forest.inverse_transform(random_forest_model.predict(feats_rf))[0]
+    pred_rf = random_forest_model.predict_proba(feats_rf)[0]
+    rf_index = np.argmax(pred_rf)
+    rrf = label_enc_random_forest.inverse_transform([rf_index])[0]
+    rf_certainty = round(pred_rf[rf_index] * 100, 2)
 
     # Save prediction to database if logged in
     if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-        db.session.add(Prediction(
-            result_xgb=rx,
-            result_lgbm=rl,
-            result_logistic=rlog,
-            result_nb=rnb,
-            result_rf=rrf,
-            user_id=user.id
-        ))
-        db.session.commit()
+      user = User.query.get(session['user_id'])
+      db.session.add(Prediction(
+        result_xgb=rx,
+        certainty_xgb=xgb_certainty,
+        result_lgbm=rl,
+        certainty_lgbm=lgbm_certainty,
+        result_logistic=rlog,
+        certainty_logistic=log_certainty,
+        result_nb=rnb,
+        certainty_nb=nb_certainty,
+        result_rf=rrf,
+        certainty_rf=rf_certainty,
+        user_id=user.id
+       ))
+      db.session.commit()
 
     user = User.query.get(session['user_id']) if 'user_id' in session else None
 
     return render_template('profile.html',
-        xgb_result=rx, lgbm_result=rl,
-        logistic_result=rlog, nb_result=rnb,
-        rf_result=rrf,
+        xgb_result=rx, xgb_certainty=xgb_certainty,
+        lgbm_result=rl, lgbm_certainty=lgbm_certainty,
+        logistic_result=rlog, log_certainty=log_certainty,
+        nb_result=rnb, nb_certainty=nb_certainty,
+        rf_result=rrf, rf_certainty=rf_certainty,
         chat_history_display=text,
         user=user)
 

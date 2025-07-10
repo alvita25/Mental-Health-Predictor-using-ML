@@ -1,14 +1,15 @@
-import cohere
+import google.generativeai as genai
+import os
+from dotenv import load_dotenv
 
-# Replace with your actual Cohere API key
-co = cohere.Client("key")
+load_dotenv()
+genai.configure(api_key=os.getenv("AIzaSyBHcfR-FQf5JHkxK0Qmoe_mZkHynmEHHJU"))
+
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 try:
-    response = co.generate(
-        model='command-r-plus',
-        prompt='Hello! How are you feeling today?',
-        max_tokens=50
-    )
-    print("✅ Cohere Response:\n", response.generations[0].text.strip())
+    response = model.generate_content("Say something positive in English.")
+    print("✅ Gemini says:", response.text)
 except Exception as e:
-    print("❌ Cohere Error:", e)
+    print("🔥 Test failed:", e)
+    

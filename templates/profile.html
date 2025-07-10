@@ -1,80 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Profile - Mental Health Chat</title>
   <style>
-    body { font-family: Arial; margin: 20px; }
-    textarea, input { width: 100%; padding: 10px; margin: 10px 0; }
-    button { padding: 10px 20px; }
-    #chat-box, #prediction { margin-top: 20px; border: 1px solid #ccc; padding: 10px; white-space: pre-wrap; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color:white;
+      color: #333;
+    }
+
+    .container {
+      max-width:100%;
+      margin: auto;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin: 0;
+      font-size: xx-large;
+    }
+
+    h3 {
+      color: #2c3e50;
+      margin: 0;
+      font-size: x-large;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #99a0a5;
+      padding: 10px 10px;
+      border-bottom: 2px solid #a2cffe;
+      height:30px;
+    }
+
+    .navbar h3 {
+      /* position:relative;
+      left:50px;  */
+      font-weight: bold;
+      color: #072441;
+      font-size: 20px;
+      display:center;
+    }
+
+    .navbar a {
+      margin-left: 15px;
+      text-decoration: none;
+      color: white;
+      background: #007acc;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+
+    .navbar a:hover {
+      background: #005fa3;
+    }
+
+    select,
+    input,
+    textarea,
+    button {
+      font-family: inherit;
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+       background-color: #4cacec;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+      font-size: medium;
+    }
+
+    button:hover {
+      background-color: #387cad;
+    }
+
+   
+
+    #prediction {
+      background: #fff8f5;
+      border: 1px solid #ffdacc;
+      padding: 20px;
+      margin-top: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 15px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ddd;
+      margin: 40px 0;
+    }
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .navbar a {
+        margin: 5px 0;
+      }
+    }
+
+    
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      font-size: 16px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background-color: #d4f8d4;
+      color: #333;
+      border-top-right-radius: 0;
+    }
+
+    .ai-message {
+      align-self: flex-start;
+      background-color: #e0f0ff;
+      color: #333;
+      border-top-left-radius: 0;
+    }
+
+    .chat-input-section input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .button-row button {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    #prediction button {
+      background-color: #e8f4fc;
+      color: #004c99;
+      border: 1px solid #b3d9ff;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    #prediction button:hover {
+      background-color: #cce7ff;
+    }
+
+    footer {
+      background-color: #f0f4f8;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      border-top: 1px solid #ddd;
+      margin-top: 40px;
+      line-height: 1.6;
+    }
+
+     .chat-box {
+  background: #eef9ff;
+  border: 1px solid #b3d9ff;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  height: 300px;              /* fixed height */
+  overflow-y: auto;           /* enables vertical scroll bar */
+  overflow-x: hidden;         /* prevent horizontal scrolling */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.chat-box {
+  scrollbar-width: thin;
+  scrollbar-color: #aaa #eef9ff;
+}
+
+
+  .chat-input-section input {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    flex: 1;
+  }
+
+  .button-row button {
+    padding: 12px;
+    font-weight: bold;
+    background-color: #4cacec;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: medium;
+  }
+
+  .button-row button:hover {
+    background-color: #387cad;
+  }
+    header {
+  background-color: #e6f0fa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  height: 100px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-left img {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #004c99;
+}
+
+.header-buttons a {
+  margin-left: 15px;
+  padding: 10px 20px;
+  text-decoration: none;
+  background-color: #007acc;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.header-buttons a:hover {
+  background-color: #005fa3;
+}
+
   </style>
 </head>
+
 <body>
-  <div class="navbar" style="text-align: right; padding: 15px; background: #f0f0f0;">
-    <span style="float: left; font-weight: bold;">Welcome, {{ user.name }}!</span>
-    <a href="{{ url_for('logout') }}" style="text-decoration: none; color: white; background: #d9534f; padding: 10px 15px; border-radius: 5px;">Logout</a>
+  <header>
+  <div class="header-left">
+    <img src="{{ url_for('static', filename='images/brain2.jpg') }}" alt="Brain Icon">
+  </div>
+  <div class="header-title">Chat2Care - Your Mental Health Companion</div>
+  <div class="header-buttons">
     <a href="{{ url_for('history') }}">View History</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</header>
+
+  <div class="navbar">
+    <h3>Welcome, {{ user.name }}!</h3>
+    <div>
+     
+
+    </div>
   </div>
 
-  <h1>Welcome to Your Profile</h1>
+  <div class="container">
 
-  <h3>Chat with AI</h3>
-  <label for="languageSelect">Choose Language:</label>
-  <select id="languageSelect">
-    <option value="en-US">English</option>
-    <option value="hi-IN">Hindi</option>
-    <option value="ta-IN">Tamil</option>
-    <option value="te-IN">Telugu</option>
-    <option value="kn-IN">Kannada</option>
-    <option value="ml-IN">Malayalam</option>
-  </select>
+    
 
-  <input id="chatInput" placeholder="Type your message or speak..." />
-  <button onclick="sendToChat()">Send</button>
-  <button onclick="startListening()">🎤 Speak</button>
-  <button onclick="stopListening()">⏹️ Stop</button>
+    <h3>Chat with AI -><label for="languageSelect">Choose Language:</label></h3>
+    
+    <select id="languageSelect">
+      <option value="en-US">English</option>
+      <option value="hi-IN">Hindi</option>
+      <option value="ta-IN">Tamil</option>
+      <option value="te-IN">Telugu</option>
+      <option value="kn-IN">Kannada</option>
+      <option value="ml-IN">Malayalam</option>
+    </select>
 
-  <div id="chat-box"></div>
+    <!-- Chat Box (now above input) -->
+    <div id="chat-box" class="chat-box"></div>
 
-  <hr>
+    <div class="chat-input-section" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+  <input id="chatInput" placeholder="Type your message or speak..." style="flex: 1; margin: 0;" />
+  <div class="button-row" style="display: flex; gap: 10px; flex-wrap: wrap; margin: 0;">
+    <button onclick="sendToChat()" style="margin: 0;">Send</button>
+    <button onclick="startListening()" style="margin: 0;">🎤 Speak</button>
+    <button onclick="stopListening()" style="margin: 0;">⏹️ Stop</button>
+  </div>
+</div>
 
-  <h3>Check Your Mental Health Prediction</h3>
-  <form id="predictForm" method="POST" action="/predict">
+    <hr>
+
+   <div style="display: flex; align-items: center; gap: 10px; margin-top: 30px; flex-wrap: wrap;">
+  <h3 style="margin: 0;">Check Your Mental Health Prediction:</h3>
+  <form id="predictForm" method="POST" action="/predict" style="display: flex; align-items: center; gap: 10px;">
     <textarea name="chat_history" id="chatHistory" hidden></textarea>
-    <button type="submit">Predict Mental Health</button>
+    <button type="submit" 
+            style="padding: 12px; 
+                   font-weight: bold; 
+                   background-color: #4cacec; 
+                   color: white; 
+                   border: none; 
+                   border-radius: 10px; 
+                   cursor: pointer; 
+                   font-size: medium;">
+      Predict
+    </button>
   </form>
+</div>
 
-  {% if xgb_result or lgbm_result or logistic_result or nb_result or rf_result %}
-  <div id="prediction" style="border: 1px solid #ccc; padding: 15px; margin-top: 20px;">
-    <h3>Prediction Results</h3>
-    {% if xgb_result %}
-      <p><strong>XGBoost:</strong> {{ xgb_result }}</p>
-    {% endif %}
+
+
     {% if lgbm_result %}
-      <p><strong>LightGBM:</strong> {{ lgbm_result }}</p>
+    <div id="prediction">
+      <h3>Prediction Results</h3>
+      <p><strong>LightGBM:</strong> {{ lgbm_result }} ({{ '%.2f' % lgbm_certainty }}%)</p>
+
+<button type="button" onclick="toggleMoreModels()">Show All Model Predictions ⬇️</button>
+<div id="moreModels" style="display: none; margin-top: 20px;">
+  {% if xgb_result %}
+  <p><strong>XGBoost:</strong> {{ xgb_result }} ({{ '%.2f' % xgb_certainty }}%)</p>
+  {% endif %}
+  
+  {% if logistic_result %}
+  <p><strong>Logistic Regression:</strong> {{ logistic_result }} ({{ '%.2f' % log_certainty }}%)</p>
+  {% endif %}
+  
+  {% if nb_result %}
+  <p><strong>Naive Bayes:</strong> {{ nb_result }} ({{ '%.2f' % nb_certainty }}%)</p>
+  {% endif %}
+  
+  {% if rf_result %}
+  <p><strong>Random Forest:</strong> {{ rf_result }} ({{ '%.2f' % rf_certainty }}%)</p>
+  {% endif %}
+</div>
+
     {% endif %}
-    {% if logistic_result %}
-      <p><strong>Logistic Regression:</strong> {{ logistic_result }}</p>
-    {% endif %}
-    {% if nb_result %}
-      <p><strong>Naive Bayes:</strong> {{ nb_result }}</p>
-    {% endif %}
-    {% if rf_result %}
-      <p><strong>Random Forest:</strong> {{ rf_result }}</p>
+
+
+    {% if chat_history_display %}
+    <div id="chat-box">
+      <h3>Previous Chat</h3>
+      <pre>{{ chat_history_display | safe }}</pre>
+    </div>
     {% endif %}
   </div>
-{% endif %}
 
- {% if chat_history_display %}
-  <div id="chat-box" style="margin-top: 20px; border: 1px solid #ccc; padding: 15px;">
-    <h3>Previous Chat</h3>
-    <pre>{{ chat_history_display | safe }}</pre>
-  </div>
-{% endif %}
+  <footer>
+    <p>
+      ⚠️ This tool is not a substitute for professional medical advice. <br>
+      Always consult a qualified psychiatrist, psychologist, or mental health professional for diagnosis or treatment.
+      <br>
+      Predictions are based on AI models which may not be 100% accurate.
+    </p>
+  </footer>
 
+
+  <!-- Scripts (unchanged from your original) -->
   <script>
-    let chatHistory = "";  // For prediction (only English user messages)
+    let chatHistory = "";
     let recognition;
     let isListening = false;
     let spokenTranscript = "";
@@ -93,29 +418,39 @@
       const selectedLang = document.getElementById("languageSelect").value;
       const translated = await translateText(nativeText, 'en');
 
-      // Send message to backend
       const res = await fetch("/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          translated: translated,     // for prediction
-          native: nativeText,         // display
+          translated: translated,
+          native: nativeText,
           language: selectedLang
         })
       });
 
       const data = await res.json();
 
-      // Only native (translated back) is shown
-      chatHistory += `${translated}\n`; // This is what goes for prediction (not shown)
-      document.getElementById("chatHistory").value = chatHistory; // Keep updating prediction input
+      // For prediction use
+      chatHistory += `${translated}\n`;
+      document.getElementById("chatHistory").value = chatHistory;
 
-      // Show only native chat messages to user
-      document.getElementById("chat-box").innerText += `You: ${data.native}\n`;
-      document.getElementById("chat-box").innerText += `AI: ${data.response_native}\n\n`;
+      // Create message elements
+      const chatBox = document.getElementById("chat-box");
 
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user-message";
+      userMsg.innerText = `You: ${data.native}`;
+      chatBox.appendChild(userMsg);
+
+      const aiMsg = document.createElement("div");
+      aiMsg.className = "message ai-message";
+      aiMsg.innerText = `AI: ${data.response_native}`;
+      chatBox.appendChild(aiMsg);
+
+      chatBox.scrollTop = chatBox.scrollHeight;
       input.value = "";
     }
+
 
     function startListening() {
       if (isListening) return;
@@ -129,7 +464,7 @@
       isListening = true;
       recognition.start();
 
-      recognition.onresult = function(event) {
+      recognition.onresult = function (event) {
         for (let i = event.resultIndex; i < event.results.length; i++) {
           spokenTranscript += event.results[i][0].transcript + " ";
         }
@@ -152,10 +487,43 @@
       document.getElementById("chatInput").value = spokenTranscript.trim();
     }
 
-    // Set chatHistory before prediction submit
     document.getElementById("predictForm").addEventListener("submit", function () {
       document.getElementById("chatHistory").value = chatHistory;
     });
+
+    function toggleMoreModels() {
+      const more = document.getElementById("moreModels");
+      const button = event.target;
+
+      if (more.style.display === "none") {
+        more.style.display = "block";
+        button.textContent = "Hide All Model Predictions ⬆️";
+      } else {
+        more.style.display = "none";
+        button.textContent = "Show All Model Predictions ⬇️";
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      const chatBox = document.getElementById("chat-box");
+      const initialMessage = document.createElement("div");
+      initialMessage.className = "message ai-message";
+
+      const selectedLang = document.getElementById("languageSelect").value;
+      const englishText = "👋 Hello! I’m here to listen and support you. You can type or speak in your preferred language.";
+
+      try {
+        const translated = await translateText(englishText, selectedLang.split("-")[0]);
+        initialMessage.innerText = translated;
+      } catch (e) {
+        initialMessage.innerText = englishText; // fallback
+      }
+
+      chatBox.appendChild(initialMessage);
+    });
+
+
   </script>
 </body>
+
 </html>

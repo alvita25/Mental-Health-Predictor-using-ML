@@ -12,8 +12,9 @@
         }
 
         .header {
-            background-color: #007bff;
-            color: white;
+            background-color: #99a0a5;
+            color: #072441;
+            
             padding: 20px;
             display: flex;
             justify-content: space-between;
@@ -55,7 +56,7 @@
         }
 
         th {
-            background-color: #007bff;
+            background-color: #007acc;
             color: white;
         }
 
@@ -76,49 +77,99 @@
         .back-btn:hover {
             background: #5a6268;
         }
+         header {
+  background-color: #e6f0fa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  height: 100px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-left img {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #004c99;
+}
+
+.header-buttons a {
+  margin-left: 15px;
+  padding: 10px 20px;
+  text-decoration: none;
+  background-color: #007acc;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.header-buttons a:hover {
+  background-color: #005fa3;
+}
+
     </style>
 </head>
 <body>
+   <header>
+  <div class="header-left">
+    <img src="{{ url_for('static', filename='images/brain2.jpg') }}" alt="Brain Icon">
+  </div>
+  <div class="header-title">Chat2Care - Your Mental Health Companion</div>
+  <div class="header-buttons">
+     <a class="back-btn" href="{{ url_for('profile') }}">← Back to Profile</a>
+  </div>
+</header>
 
     <div class="header">
-        <h2>Hello, {{ user.name }} | Prediction History</h2>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <h2>Welcome back, {{user.name}}👋 | View your previous mental health predictions</h2>
+        
     </div>
 
     <div class="container">
        {% if predictions %}
-    <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>XGBoost</th>
-                <th>LightGBM</th>
-                <th>Logistic Regression</th>
-                <th>Naive Bayes</th>
-                <th>Random Forest</th>
-                <th>Timestamp</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in predictions %}
-                <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ p.result_xgb }}</td>
-                    <td>{{ p.result_lgbm }}</td>
-                    <td>{{ p.result_logistic }}</td>
-                    <td>{{ p.result_nb }}</td>
-                    <td>{{ p.result_rf }}</td>
-                    <td>{{ p.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <table>
+  <thead>
+    <tr>
+      <th>Timestamp</th>
+      <th>XGBoost</th>
+      <th>LightGBM</th>
+      <th>Logistic</th>
+      <th>Naive Bayes</th>
+      <th>Random Forest</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in predictions %}
+<tr>
+  <td>{{ p.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+  <td>{{ p.result_xgb }} ({{ "%.2f"|format(p.certainty_xgb) }}%)</td>
+  <td>{{ p.result_lgbm }} ({{ "%.2f"|format(p.certainty_lgbm) }}%)</td>
+  <td>{{ p.result_logistic }} ({{ "%.2f"|format(p.certainty_logistic) }}%)</td>
+  <td>{{ p.result_nb }} ({{ "%.2f"|format(p.certainty_nb) }}%)</td>
+  <td>{{ p.result_rf }} ({{ "%.2f"|format(p.certainty_rf) }}%)</td>
+</tr>
+{% endfor %}
+  </tbody>
+</table>
 {% else %}
     <p>No prediction history found.</p>
 {% endif %}
 
 
-        <a class="back-btn" href="{{ url_for('profile') }}">← Back to Profile</a>
+       
     </div>
 
 </body>

@@ -16,6 +16,7 @@
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f9f9f9;
+      
     }
 
     /* Header */
@@ -68,15 +69,21 @@
       justify-content: center;
       align-items: center;
       padding: 60px 20px;
+      
     }
 
     form {
       background: white;
       padding: 40px;
       border-radius: 10px;
-      width: 100%;
+      width: 100% ;
       max-width: 400px;
       box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      background-image: url("../static/images/background2.jpg");
+      background-size:  100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      
     }
 
     h2 {
@@ -86,7 +93,7 @@
     }
 
     input {
-      width: 100%;
+      width: 90%;
       padding: 12px;
       margin-bottom: 20px;
       border-radius: 5px;
@@ -95,7 +102,9 @@
     }
 
     button {
-      background-color: #28a745;
+      
+      background-color: #2242aa;
+      /* background-color: var(--primary-color); */
       border: none;
       color: white;
       font-weight: bold;
@@ -106,7 +115,7 @@
     }
 
     button:hover {
-      background-color: #218838;
+       background-color: #3a6f93;
     }
 
     .flash {
@@ -143,7 +152,7 @@
   <!-- Header -->
   <header>
     <div class="header-left">
-      <img src="https://cdn-icons-png.flaticon.com/512/4320/4320456.png" alt="Brain Icon">
+      <img src="{{ url_for('static', filename='images/brain2.jpg') }}" alt="Brain Icon" style="height: 80px; width:100%; margin-right: 10px;">
     </div>
     <div class="header-title">Chat2Care - Your Mental Health Companion</div>
     <div class="header-buttons">
