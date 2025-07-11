@@ -334,7 +334,7 @@
     <div class="chat-input-section" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
   <input id="chatInput" placeholder="Type your message or speak..." style="flex: 1; margin: 0;" />
   <div class="button-row" style="display: flex; gap: 10px; flex-wrap: wrap; margin: 0;">
-    <button onclick="sendToChat()" style="margin: 0;">Send</button>
+    <button id="sendBtn" onclick="sendToChat()" style="margin: 0;">Send</button>
     <button onclick="startListening()" style="margin: 0;">🎤 Speak</button>
     <button onclick="stopListening()" style="margin: 0;">⏹️ Stop</button>
   </div>
@@ -422,45 +422,64 @@
     }
 
     async function sendToChat() {
-      const input = document.getElementById("chatInput");
-      const nativeText = input.value.trim();
-      if (!nativeText) return;
+  const input = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const chatBox = document.getElementById("chat-box");
 
-      const selectedLang = document.getElementById("languageSelect").value;
-      const translated = await translateText(nativeText, 'en');
+  const nativeText = input.value.trim();
+  if (!nativeText) return;
 
-      const res = await fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          translated: translated,
-          native: nativeText,
-          language: selectedLang
-        })
-      });
+  // Disable send button and show loading
+  sendBtn.disabled = true;
+  sendBtn.innerText = "Sending...";
 
-      const data = await res.json();
+  // Show user message immediately
+  const userMsg = document.createElement("div");
+  userMsg.className = "message user-message";
+  userMsg.innerText = `You: ${nativeText}`;
+  chatBox.appendChild(userMsg);
 
-      // For prediction use
-      chatHistory += `${translated}\n`;
-      document.getElementById("chatHistory").value = chatHistory;
+  // Scroll to bottom
+  chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Create message elements
-      const chatBox = document.getElementById("chat-box");
+  // Clear input immediately
+  input.value = "";
 
-      const userMsg = document.createElement("div");
-      userMsg.className = "message user-message";
-      userMsg.innerText = `You: ${data.native}`;
-      chatBox.appendChild(userMsg);
+  const selectedLang = document.getElementById("languageSelect").value;
 
-      const aiMsg = document.createElement("div");
-      aiMsg.className = "message ai-message";
-      aiMsg.innerText = `AI: ${data.response_native}`;
-      chatBox.appendChild(aiMsg);
+  // Translate and send to backend
+  const translated = await translateText(nativeText, 'en');
+  const res = await fetch("/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      translated: translated,
+      native: nativeText,
+      language: selectedLang
+    })
+  });
 
-      chatBox.scrollTop = chatBox.scrollHeight;
-      input.value = "";
-    }
+  const data = await res.json();
+
+  // For prediction use
+  chatHistory += `${translated}\n`;
+  document.getElementById("chatHistory").value = chatHistory;
+
+  // Show AI message
+  const aiMsg = document.createElement("div");
+  aiMsg.className = "message ai-message";
+  aiMsg.innerText = `AI: ${data.response_native}`;
+  chatBox.appendChild(aiMsg);
+
+  // Scroll to bottom again
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  // Re-enable the send button
+  sendBtn.disabled = false;
+  sendBtn.innerText = "Send";
+}
+
+
 
 
     function startListening() {
