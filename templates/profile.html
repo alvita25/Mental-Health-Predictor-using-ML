@@ -172,12 +172,22 @@
     #prediction button {
       background-color: #e8f4fc;
       color: #004c99;
-      border: 1px solid #b3d9ff;
       border-radius: 8px;
       padding: 10px;
       cursor: pointer;
       margin-top: 15px;
       transition: background-color 0.3s ease;
+    }
+
+    .models-show {
+      background-color: #e8f4fc;
+      border: 1px solid #b3d9ff;
+      border-radius: 8px;
+      padding: 0px 15px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+      margin-bottom: 10px;
     }
 
     #prediction button:hover {
@@ -356,7 +366,7 @@
     <div id="prediction">
       <h3>Prediction Results</h3>
       <p><strong>LightGBM:</strong> {{ lgbm_result }} ({{ '%.2f' % lgbm_certainty }}%)</p>
-
+<div class="models-show">
 <button type="button" onclick="toggleMoreModels()">Show All Model Predictions ⬇️</button>
 <div id="moreModels" style="display: none; margin-top: 20px;">
   {% if xgb_result %}
@@ -374,6 +384,7 @@
   {% if rf_result %}
   <p><strong>Random Forest:</strong> {{ rf_result }} ({{ '%.2f' % rf_certainty }}%)</p>
   {% endif %}
+</div>
 </div>
 
     {% endif %}
