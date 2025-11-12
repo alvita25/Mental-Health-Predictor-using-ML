@@ -361,16 +361,16 @@
 </div>
 
 
-
-    {% if lgbm_result %}
+    {% if xgb_result %}
+    
     <div id="prediction">
       <h3>Prediction Results</h3>
-      <p><strong>LightGBM:</strong> {{ lgbm_result }} ({{ '%.2f' % lgbm_certainty }}%)</p>
+      <p><strong>XGBoost:</strong> {{  xgb_result }} ({{ '%.2f' % xgb_certainty }}%)</p>
 <div class="models-show">
 <button type="button" onclick="toggleMoreModels()">Show All Model Predictions ⬇️</button>
 <div id="moreModels" style="display: none; margin-top: 20px;">
-  {% if xgb_result %}
-  <p><strong>XGBoost:</strong> {{ xgb_result }} ({{ '%.2f' % xgb_certainty }}%)</p>
+  {% if lgbm_result %}
+  <p><strong>LightGBM:</strong> {{ lgbm_result }} ({{ '%.2f' % lgbm_certainty }}%)</p>
   {% endif %}
   
   {% if logistic_result %}
