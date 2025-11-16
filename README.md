@@ -5,7 +5,14 @@ Project overview
 ----------------
 The Mental Health Chatbot is an intelligent conversational system designed to provide emotional support and assist users in understanding their mental well-being through natural language interaction. It leverages Machine Learning (ML) models to interpret user input, detect underlying emotional states (like stress, anxiety, or sadness), and respond empathetically in real-time.
 
-The chatbot integrates five separate ML classifiers — XGBoost, LightGBM, Random Forest, Naive Bayes, and Logistic Regression — each trained to predict the emotional category of user messages based on text data and linguistic features. Among them, XGBoost serves as the primary model due to its superior accuracy, generalization capability, and robustness to complex, non-linear relationships in text-based features.
+The chatbot integrates five separate ML classifiers —
+- XGBoost
+- LightGBM
+- Random Forest
+- Naive Bayes
+- Logistic Regression
+Each trained to predict the emotional category of user messages based on text data and linguistic features.
+Among them, XGBoost serves as the primary model due to its superior accuracy, generalization capability, and robustness to complex, non-linear relationships in text-based features.
 
 Prerequisites
 -------------
@@ -60,17 +67,13 @@ python app.py
 
 ---
 
-Adding screenshots
+Screenshots
 ------------------
-- <img width="1899" height="913" alt="image" src="https://github.com/user-attachments/assets/d8115f0d-310c-468b-81f1-72ea79664240" />
-- <img width="1892" height="912" alt="image" src="https://github.com/user-attachments/assets/a41bbcd0-588d-4b3f-9ea5-94cc51821419" />
+<img width="1899" height="913" alt="image" src="https://github.com/user-attachments/assets/d8115f0d-310c-468b-81f1-72ea79664240" align="center" />
+<img width="1892" height="912" alt="image" src="https://github.com/user-attachments/assets/a41bbcd0-588d-4b3f-9ea5-94cc51821419" slign="center"/>
 
 
 Contributing
 ------------
 - Feel free to open issues or submit pull requests.
 - Before contributing, run the notebooks locally and ensure they execute end-to-end.
-
-If you want, I can:
-- Fill in the actual notebook filenames and model paths if you give me the file listing, or
-- Create a ready-to-commit README.md file for you if you’d like me to push it to your repository.
